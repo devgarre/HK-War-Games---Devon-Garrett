@@ -24,6 +24,7 @@ int main()
 	//initializes all variables for the drone search program
 	int binaryNumberOfGuesses = 0;
 	bool binaryTargetFound = false;
+	int linearCurrentGuess = bottomLimit;
 	int linearNumberOfGuesses = 0;
 	bool linearTargetFound = false;
 	int randomNumberOfGuesses = 0;
@@ -38,7 +39,7 @@ int main()
 		//loops the binary search protocol
 		while (binaryTargetFound == false)
 		{
-			int binaryCurrentGuess = ((topLimit - bottomLimit) / 2) + bottomLimit;
+			int binaryCurrentGuess = ((binaryTopLimit - binaryBottomLimit) / 2) + binaryBottomLimit;
 			binaryNumberOfGuesses++; //increases binary guess count
 			cout << "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=" << endl;
 			cout << "HK-Aerial Binary Drone currently searching Sector #" << binaryCurrentGuess << endl;
@@ -71,19 +72,24 @@ int main()
 		}
 
 		//loops the linear search protocol
-		while (linearTargetFound == false) 
+		while (linearTargetFound == false)
 		{
-			int linearCurrentGuess = bottomLimit;
 			linearNumberOfGuesses++; //increases linear guess count
 			cout << "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=" << endl;
 			cout << "HK-Aerial Linear Drone currently searching Sector #" << linearCurrentGuess << endl;
 
 			//determines if current linear guess is correct
-			if (enemyBase == linearCurrentGuess) 
+			if (enemyBase == linearCurrentGuess)
 			{
 				cout << "Target has been found by the Linear Drone in Sector #" << linearCurrentGuess << endl;
 				cout << "It took the HK-Aerial Drone " << linearNumberOfGuesses << " sector scan(s) in order to find the targets." << endl << endl;
 				linearTargetFound = true;
+			}
+
+			else if (enemyBase != linearCurrentGuess)
+			{
+				cout << "Target has not been found." << endl;
+				linearCurrentGuess++;
 			}
 
 			else
@@ -92,57 +98,67 @@ int main()
 				cout << "A request has been sent to maintnece." << endl << endl;
 				linearTargetFound = true;
 			}
+		}
 
-			//loops the random search protocol
-			while (randomTargetFound == false)
+		//loops the random search protocol
+		while (randomTargetFound == false)
+		{
+			int randomCurrentGuess = rand() % topLimit + bottomLimit;
+			randomNumberOfGuesses++; //increases linear guess count
+			cout << "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=" << endl;
+			cout << "HK-Aerial Random Drone currently searching Sector #" << randomCurrentGuess << endl;
+
+			//determines if current linear guess is correct
+			if (enemyBase == randomCurrentGuess)
 			{
-				srand(time(0));
-				int randomCurrentGuess = rand() % topLimit + bottomLimit;
-				randomNumberOfGuesses++; //increases linear guess count
-				cout << "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=" << endl;
-				cout << "HK-Aerial Random Drone currently searching Sector #" << randomCurrentGuess << endl;
-
-				//determines if current linear guess is correct
-				if (enemyBase == randomCurrentGuess)
-				{
-					cout << "Target has been found by the Random Drone in Sector #" << randomCurrentGuess << endl;
-					cout << "It took the HK-Aerial Drone " << randomNumberOfGuesses << " sector scan(s) in order to find the targets." << endl << endl;
-					randomTargetFound = true;
-				}
-
-				else
-				{
-					cout << "Random Drone has malfunctioned!" << endl;
-					cout << "A request has been sent to maintnece." << endl << endl;
-					randomTargetFound = true;
-				}
+				cout << "Target has been found by the Random Drone in Sector #" << randomCurrentGuess << endl;
+				cout << "It took the HK-Aerial Drone " << randomNumberOfGuesses << " sector scan(s) in order to find the targets." << endl << endl;
+				randomTargetFound = true;
 			}
 
-			//loops the random search protocol
-			while (humanTargetFound == false)
+			else if (enemyBase != randomCurrentGuess)
 			{
-				int humanCurrentGuess;
-				humanNumberOfGuesses++; //increases linear guess count
-				cout << "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=" << endl;
-				cout << "HK-Aerial Human-Controlled Drone currently searching Sector #" << humanCurrentGuess << endl;
+				cout << "Target has not been found." << endl;
+			}
 
-				//determines if current linear guess is correct
-				if (enemyBase == humanCurrentGuess)
-				{
-					cout << "Target has been found by the Random Drone in Sector #" << humanCurrentGuess << endl;
-					cout << "It took the HK-Aerial Drone " << humanNumberOfGuesses << " sector scan(s) in order to find the targets." << endl << endl;
-					humanTargetFound = true;
-				}
-
-				else
-				{
-					cout << "Human-Controlled Drone has malfunctioned!" << endl;
-					cout << "A request has been sent to maintnece." << endl << endl;
-					humanTargetFound = true;
-				}
+			else
+			{
+				cout << "Random Drone has malfunctioned!" << endl;
+				cout << "A request has been sent to maintnece." << endl << endl;
+				randomTargetFound = true;
 			}
 		}
 
+		//loops the random search protocol
+		while (humanTargetFound == false)
+		{
+			int humanCurrentGuess;
+			cout << "Enter a guess for the enemy base location (1-64): ";
+			cin >> humanCurrentGuess;
+			humanNumberOfGuesses++; //increases linear guess count
+			cout << "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=" << endl;
+			cout << "HK-Aerial Human-Controlled Drone currently searching Sector #" << humanCurrentGuess << endl;
+
+			//determines if current linear guess is correct
+			if (enemyBase == humanCurrentGuess)
+			{
+				cout << "Target has been found by the Random Drone in Sector #" << humanCurrentGuess << endl;
+				cout << "It took the HK-Aerial Drone " << humanNumberOfGuesses << " sector scan(s) in order to find the targets." << endl << endl;
+				humanTargetFound = true;
+			}
+
+			else if (enemyBase != humanCurrentGuess)
+			{
+				cout << "Target has not been found." << endl;
+			}
+
+			else
+			{
+				cout << "Human-Controlled Drone has malfunctioned!" << endl;
+				cout << "A request has been sent to maintnece." << endl << endl;
+				humanTargetFound = true;
+			}
+		}
 		if (binaryTargetFound == true)
 		{
 			if (linearTargetFound == true)
@@ -151,12 +167,18 @@ int main()
 				{
 					if (humanTargetFound == true)
 					{
+						cout << "It took the Binary Drone " << binaryNumberOfGuesses << " guesses to find the enemy sector." << endl;
+						cout << "It took the Linear Drone " << linearNumberOfGuesses << " guesses to find the enemy sector." << endl;
+						cout << "It took the Random Drone " << randomNumberOfGuesses << " guesses to find the enemy sector." << endl;
+						cout << "It took the Human-Controlled Drone " << humanNumberOfGuesses << " guesses to find the enemy sector." << endl;
 						allTargetFound = true;
 					}
 				}
 			}
 		}
 	}
+
+
 	system("pause");
 
 	return 0;
